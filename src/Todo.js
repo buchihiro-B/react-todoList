@@ -1,5 +1,6 @@
 import './Todo.css'
 import TodoItem from './TodoItem.js'
+import Input from './Input.js'
 import React, { useState } from 'react';
 
 const getKey = () => Math.random().toString(32).substring(2);
@@ -21,16 +22,22 @@ function Todo() {
         setItems(newItems);
     }
 
+    const handleAdd = text => {
+        setItems([...items, {key: getKey(), text, done: false}]);
+    }
+
     return (
         <div className="panel">
             <div className="panel-heading">
                 ⚛️ React ToDo
             </div>
+            <Input onAdd={handleAdd} />
             {items.map(item => (
                 <TodoItem 
                     key={item.key} 
                     item={item}
-                    onCheck={handleCheck}/>
+                    onCheck={handleCheck}
+                />
             ))}
             <div className="panel-block">
                 {items.length} items
