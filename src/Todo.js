@@ -1,6 +1,7 @@
 import './Todo.css'
 import TodoItem from './TodoItem.js'
 import Input from './Input.js'
+import Filter from './Filter.js'
 import React, { useState } from 'react';
 
 const getKey = () => Math.random().toString(32).substring(2);
@@ -11,6 +12,10 @@ function Todo() {
         {key: getKey(), text: 'Learn React', done: false},
         {key: getKey(), text: 'Get some good sleep', done: false},
     ]);
+
+    const [filter, setFilter] = React.useState('ALL');
+
+    const handleFilterChange = value => setFilter(value);
 
     const handleCheck = checked => {
         const newItems =items.map(item => {
@@ -26,13 +31,23 @@ function Todo() {
         setItems([...items, {key: getKey(), text, done: false}]);
     }
 
+    const displayItems = items.filter(item => {
+        if(filter === 'ALL') return true;
+        if(filter === 'TODO') return !item.done;
+        if(filter === 'DONE') return item.done;
+    });
+
     return (
         <div className="panel">
             <div className="panel-heading">
                 ⚛️ React ToDo
             </div>
             <Input onAdd={handleAdd} />
-            {items.map(item => (
+            <Filter 
+                onChange={handleFilterChange}
+                value={filter}
+            />
+            {displayItems.map(item => (
                 <TodoItem 
                     key={item.key} 
                     item={item}
@@ -40,7 +55,7 @@ function Todo() {
                 />
             ))}
             <div className="panel-block">
-                {items.length} items
+                {displayItems.length} items
             </div>
         </div>
     );
